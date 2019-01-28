@@ -1,0 +1,14 @@
+---
+title: "Group Lab 2 – Mapping Origin-Destination Data on Employment and Industry in the US"
+author: "Group6"
+date: "January 28, 2019"
+output: html_document
+---
+
+```{r , message=FALSE, warning=FALSE, echo=TRUE}
+## Load all libs here please. 
+library(sf)
+library(tmap)
+
+```
+
