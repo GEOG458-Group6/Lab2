@@ -1,6 +1,6 @@
 ---
 title: "Group Lab 2 – Mapping Origin-Destination Data on Employment and Industry in the US"
-author: "Group6"
+author: "Group 6 (Xinbo Lu, Wenjin Yu, Jody Tran, Doyle Park, Abraham Im)"
 date: "January 28, 2019"
 output: html_document
 ---
