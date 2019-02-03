@@ -6,25 +6,35 @@ output: html_document
 ---
 
 ```{r , message=FALSE, warning=FALSE, echo=TRUE}
-## Load all libs here please. 
-library(sf)
-library(tmap)
+##Setting up table and cleaning up
 
 t = read.csv("wa_od_main_JT00_2015.csv")
 t$w_geocode<-as.character(t$w_geocode)
 t$h_geocode<-as.character(t$h_geocode)
-
-
 t$w_geocode[which(length(t$w_geocode) == 14)]<-paste0("0",t$w_geocode[which(length(t$w_geocode) == 14)])
 t$h_geocode[which(length(t$h_geocode) == 14)]<-paste0("0",t$h_geocode[which(length(t$h_geocode) == 14)])
 
+
+##Making Columns for worktract and hometract
 t$wt<-substr(t$w_geocode,1,11)
 t$ht<-substr(t$h_geocode,1,11)
 
-wtutract=aggregate(. ~ wt + ht,data=t[,c(11,14,15)],FUN=sum)
-mantract=aggregate(. ~ wt + ht,data=t[,c(10,14,15)],FUN=sum)
-total=aggregate(. ~ wt + ht, data=t[,c(3,14,15)],FUN=sum)
 
+##Aggregating all work type (S000) by wt
+
+wtutract=aggregate(. ~ wt + ht,data=t[,c(3,14,15)],FUN=sum)
+
+##Importing MSA tract list and cleaning up to make merge work. MSA is the WA's all census tracts here
+WA <- read.csv("WA_census_2015.csv")
+
+##change GEOID to wt for the joining/merging process
+names(WA)[6] <- paste("wt")
+
+
+##Merging to cut dataset down to just WA census tract
+wtutract2=merge(WA,wtutract,by="wt")
+
+write.table(wtutract2, "OD_WA_CensusTract.csv")
 
 
 ```
