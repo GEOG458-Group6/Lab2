@@ -35,7 +35,68 @@ names(WA)[6] <- paste("wt")
 wtutract2=merge(WA,wtutract,by="wt")
 
 write.table(wtutract2, "OD_WA_CensusTract.csv")
+```
 
 
+```{r , message=FALSE, warning=FALSE, echo=TRUE}
+## FOR WAC CSV
+##Setting up table and cleaning up
+w = read.csv("wa_wac_S000_JT00_2015.csv")
+w$w_geocode<-as.character(w$w_geocode)
+w$w_geocode[which(length(w$w_geocode) == 14)]<-paste0("0",w$w_geocode[which(length(w$w_geocode) == 14)])
+
+
+##Making Columns for worktract and hometract
+w$wt<-substr(w$w_geocode,1,11)
+
+
+##Aggregating
+wtuwac=aggregate(. ~ w$wt,data=w[,c(2,11,13,14,16)],FUN=sum)
+colnames(wtuwac)[colnames(wtuwac)=="w$wt"] <- "GEOID"
+
+
+##Merge w/ King County Tract
+kc=read.csv("kcTract10.csv")
+names(kc)[1]=paste("wt")
+kc$GEOID10<-as.character(kc$GEOID10)
+colnames(kc)[colnames(kc)=="GEOID10"] <- "GEOID"
+wackc=merge(kc,wtuwac,by="GEOID")
+
+
+##Adding Combined UMWT (utilities, manufacturing, wholesale trade, and transportation & warehouseing)
+wackc["UMWT"]=wackc$CNS03+wackc$CNS05+wackc$CNS06+wackc$CNS08
+wackc["UMWTshare"]=wackc$UMWT/wackc$C000
+
+write.csv(wackc,"wac2015_Alljobs.csv")
+```
+
+
+```{r , message=FALSE, warning=FALSE, echo=TRUE}
+## FOR RAC CSV
+##Setting up table and cleaning up
+r = read.csv("wa_rac_S000_JT00_2015.csv")
+r$h_geocode<-as.character(r$h_geocode)
+r$h_geocode[which(length(r$h_geocode) == 14)]<-paste0("0",r$h_geocode[which(length(r$h_geocode) == 14)])
+
+
+##Making Columns for worktract and hometract
+r$rt<-substr(r$h_geocode,1,11)
+
+
+##Aggregating
+rturac=aggregate(. ~ r$rt,data=r[,c(2,11,13,14,16)],FUN=sum)
+colnames(rturac)[colnames(rturac)=="r$rt"] <- "GEOID"
+
+
+##Merge w/ King County Tract
+names(kc)[1]=paste("rt")
+rackc=merge(kc,rturac,by="GEOID")
+
+
+##Adding Combined UMWT (utilities, manufacturing, wholesale trade, and transportation & warehouseing)
+rackc["UMWT"]=rackc$CNS03+rackc$CNS05+rackc$CNS06+rackc$CNS08
+rackc["UMWTshare"]=rackc$UMWT/rackc$C000
+
+write.csv(rackc,"rac2015_Alljobs.csv")
 ```
 
