@@ -4,9 +4,10 @@ author: "Group 6 (Xinbo Lu, Wenjin Yu, Jody Tran, Doyle Park, Abraham Im)"
 date: "January 28, 2019"
 output: html_document
 ---
+##Part 2, preparing OD data
+For this step, the purpose is to aggregate each work type, for example, S000 and SA01, and then trim the sum of each work type to fit in the King County census tract 2010. 
 
 ```{r , message=FALSE, warning=FALSE, echo=TRUE}
-##Setting up table and cleaning up
 
 t = read.csv("wa_od_main_JT00_2015.csv")
 t$w_geocode<-as.character(t$w_geocode)
@@ -19,22 +20,39 @@ t$h_geocode[which(length(t$h_geocode) == 14)]<-paste0("0",t$h_geocode[which(leng
 t$wt<-substr(t$w_geocode,1,11)
 t$ht<-substr(t$h_geocode,1,11)
 
-
+t2<- t[, 3:15]
 ##Aggregating all work type (S000) by wt
 
-wtutract=aggregate(. ~ wt + ht,data=t[,c(3,14,15)],FUN=sum)
+type_S000 = aggregate(. ~ wt + ht,data=t[,c(3,14,15)],FUN=sum)
+type_SA01 = aggregate(. ~ wt + ht,data=t[,c(4,14,15)],FUN=sum)
+type_SA02 = aggregate(. ~ wt + ht,data=t[,c(5,14,15)],FUN=sum)
+type_SA03= aggregate(. ~ wt + ht,data=t[,c(6,14,15)],FUN=sum)
+type_SE01 = aggregate(. ~ wt + ht,data=t[,c(7,14,15)],FUN=sum)
+type_SE02 = aggregate(. ~ wt + ht,data=t[,c(8,14,15)],FUN=sum)
+type_SE03 = aggregate(. ~ wt + ht,data=t[,c(9,14,15)],FUN=sum)
+type_SI01 = aggregate(. ~ wt + ht,data=t[,c(10,14,15)],FUN=sum)
+type_SI02 = aggregate(. ~ wt + ht,data=t[,c(11,14,15)],FUN=sum)
+type_SI03 = aggregate(. ~ wt + ht,data=t[,c(12,14,15)],FUN=sum)
+
+
+pre_OD_worktype_tract <- data.frame(type_S000, type_SA01, type_SA02, type_SA03, type_SE01, type_SE02, type_SE03, type_SI01, type_SI02, type_SI03)
+
+OD_worktype_tract <- pre_OD_worktype_tract %>%
+  select(-contains("t."))
 
 ##Importing MSA tract list and cleaning up to make merge work. MSA is the WA's all census tracts here
-WA <- read.csv("WA_census_2015.csv")
+kc <- read.csv("kcTract10.csv")
 
 ##change GEOID to wt for the joining/merging process
-names(WA)[6] <- paste("wt")
+names(kc)[5] <- ("wt")
 
 
 ##Merging to cut dataset down to just WA census tract
-wtutract2=merge(WA,wtutract,by="wt")
+kc_OD=merge(kc,OD_worktype_tract,by="wt")
+kc_OD$wt<- as.character(kc_OD$wt)
+kc_OD$wt[which(length(kc_OD$wt) == 14)]<-paste0("0",kc_OD$wt[which(length(kc_OD$wt) == 14)])
 
-write.table(wtutract2, "OD_WA_CensusTract.csv")
+write.csv(kc_OD, "OD2015_Alljobs.csv")
 ```
 
 
