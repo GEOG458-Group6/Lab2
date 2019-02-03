@@ -9,6 +9,7 @@ For this step, the purpose is to aggregate each work type, for example, S000 and
 
 ```{r , message=FALSE, warning=FALSE, echo=TRUE}
 
+## read the od csv, and clean up formatting issues
 t = read.csv("wa_od_main_JT00_2015.csv")
 t$w_geocode<-as.character(t$w_geocode)
 t$h_geocode<-as.character(t$h_geocode)
@@ -20,9 +21,7 @@ t$h_geocode[which(length(t$h_geocode) == 14)]<-paste0("0",t$h_geocode[which(leng
 t$wt<-substr(t$w_geocode,1,11)
 t$ht<-substr(t$h_geocode,1,11)
 
-t2<- t[, 3:15]
-##Aggregating all work type (S000) by wt
-
+##Aggregating each work type
 type_S000 = aggregate(. ~ wt + ht,data=t[,c(3,14,15)],FUN=sum)
 type_SA01 = aggregate(. ~ wt + ht,data=t[,c(4,14,15)],FUN=sum)
 type_SA02 = aggregate(. ~ wt + ht,data=t[,c(5,14,15)],FUN=sum)
@@ -34,24 +33,28 @@ type_SI01 = aggregate(. ~ wt + ht,data=t[,c(10,14,15)],FUN=sum)
 type_SI02 = aggregate(. ~ wt + ht,data=t[,c(11,14,15)],FUN=sum)
 type_SI03 = aggregate(. ~ wt + ht,data=t[,c(12,14,15)],FUN=sum)
 
-
+##using a df to store the aggregated work type
 pre_OD_worktype_tract <- data.frame(type_S000, type_SA01, type_SA02, type_SA03, type_SE01, type_SE02, type_SE03, type_SI01, type_SI02, type_SI03)
 
+##clean up duplicated wt and ht
 OD_worktype_tract <- pre_OD_worktype_tract %>%
   select(-contains("t."))
 
-##Importing MSA tract list and cleaning up to make merge work. MSA is the WA's all census tracts here
+##Importing King Country tract list 
 kc <- read.csv("kcTract10.csv")
 
 ##change GEOID to wt for the joining/merging process
 names(kc)[5] <- ("wt")
 
 
-##Merging to cut dataset down to just WA census tract
+##Merging to cut dataset down to just KC tracts
 kc_OD=merge(kc,OD_worktype_tract,by="wt")
+
+##clean formatting issues
 kc_OD$wt<- as.character(kc_OD$wt)
 kc_OD$wt[which(length(kc_OD$wt) == 14)]<-paste0("0",kc_OD$wt[which(length(kc_OD$wt) == 14)])
 
+##output csv 
 write.csv(kc_OD, "OD2015_Alljobs.csv")
 ```
 
