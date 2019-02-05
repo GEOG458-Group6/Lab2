@@ -124,6 +124,22 @@ rackc["UMWTshare"]=rackc$UMWT/rackc$C000
 
 
 ##Part 3
+###One non-spatial visualization
+```{r , message=FALSE, warning=FALSE, echo=TRUE}
+## Done by Jody
+library(ggplot2)
+library(raster)
+
+alljobs_plot <- ggplot(data=OD_worktype_tract,aes(x=ht, y=S000, color=S000)) +geom_point() +xlab("Residence Block") +ylab("Total Number of Jobs") +ggtitle("Residence-Jobs Relation") +theme_bw()
+alljobs_plot
+
+ttujobs_plot <- ggplot(data=OD_worktype_tract,aes(x=wt, y=S000, color=S000)) +geom_point() +xlab("Workplace Block") +ylab("Total Number of Jobs") +ggtitle("Workplace-Jobs Relation") +theme_bw()
+ttujobs_plot
+
+```
+
+
+##Part 3
 ###Step6
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
 ##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
@@ -158,3 +174,4 @@ title(paste("LQ of SA01 and S000"))
 legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
 
 ```
+
