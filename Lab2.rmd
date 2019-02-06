@@ -9,7 +9,7 @@ output: html_document
 For this step, the purpose is to aggregate each work type, for example, S000 and SA01, and then trim the sum of each work type to fit in the King County census tract 2010. 
 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
-library(dplyr)
+
 ## read the od csv, and clean up formatting issues
 t = read.csv("wa_od_main_JT00_2015.csv")
 t$w_geocode<-as.character(t$w_geocode)
@@ -47,7 +47,6 @@ kc <- read.csv("kcTract10.csv")
 ##change GEOID to wt for the joining/merging process
 names(kc)[5] <- ("wt")
 
-
 ##Merging to cut dataset down to just KC tracts
 kc_OD=merge(kc,OD_worktype_tract,by="wt")
 
@@ -60,7 +59,7 @@ kc_OD$wt[which(length(kc_OD$wt) == 14)]<-paste0("0",kc_OD$wt[which(length(kc_OD$
 ```
 
 
-```{r , message=FALSE, warning=FALSE, echo=TRUE}
+```{r , message=FALSE, warning=FALSE, echo=FALSE}
 ## FOR WAC CSV
 ##Setting up table and cleaning up
 w = read.csv("wa_wac_S000_JT00_2015.csv")
@@ -93,7 +92,7 @@ wackc["UMWTshare"]=wackc$UMWT/wackc$C000
 ```
 
 
-```{r , message=FALSE, warning=FALSE, echo=TRUE}
+```{r , message=FALSE, warning=FALSE, echo=FALSE}
 ## FOR RAC CSV
 ##Setting up table and cleaning up
 r = read.csv("wa_rac_S000_JT00_2015.csv")
@@ -133,8 +132,10 @@ Our area of interest is King County, Washington, mainly because of the Seattle a
 Our main findings show that
 
 ##Part 3
-###One non-spatial visualization
-```{r , message=FALSE, warning=FALSE, echo=TRUE}
+
+###Step 2 
+####First non-spatial visualization
+```{r , message=FALSE, warning=FALSE, echo=FALSE}
 ## Done by Jody
 library(ggplot2)
 library(raster)
@@ -147,7 +148,8 @@ ttujobs_plot
 
 ```
 
-###Proportions of Jobs in Census Blocks where People are Working
+####Second non-spatial visualization
+Proportions of Jobs in Census Blocks where People are Working
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
 library(tidyverse)
@@ -208,6 +210,7 @@ ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatt
 ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
 #contour plot to show concentration
 ```
+
 ###Part3.4
 ```{r wutt3.4,message=FALSE,warning=FALSE,echo=FALSE}
 t = read.csv("wa_od_main_JT00_2015.csv")
