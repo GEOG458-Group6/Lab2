@@ -146,6 +146,7 @@ ttujobs_plot <- ggplot(data=OD_worktype_tract,aes(x=wt, y=S000, color=S000)) +ge
 ttujobs_plot
 
 ```
+
 ###Proportions of Jobs in Census Blocks where People are Working
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
@@ -220,11 +221,10 @@ head(gga)
 ```
 
 
-
-##Part 3
 ###Step6
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
-##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
+Based on the LQ plot, we can see high clustering of workers younger than 29 working at Western Washington Area. Since the King County shapefile includes waterbodies (some people living on a boat, and US Census includes them as a single tract), thoses tracts has a really high location quotient. This shouldn't affect the study, because we are giving an overview on the distribution of workers in the entire county. This analysis corresponds to our assumption that cities such as Seattle, Bellevue, and Kirkland usually have high clustering of young age workers.
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
+##Calculate Location Quotients of OD data.
 library(maptools)
 library(RColorBrewer)
 library(tmap)
@@ -237,22 +237,33 @@ names(kcTract)
 SA01 <- OD$SA01
 S000 <- OD$S000
 
+##Creating a function to calculate the location quotient between SA01 and S000
 LQ <- function(SA01, S000){
   sdp <- SA01/S000
   dp <- sum(SA01) / sum(S000)
   sdp/dp
 }
 
-
+##Creating a dataframe to includ working tract, and location quotient
 kc_LQ <- data.frame(OD$wt, LQ(SA01, S000))
+
+##Change the column names
 colnames(kc_LQ) <- c("wt", "kc_LQ")
+
+##Creating breaks to get choropleth map 
 brks<-c(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5)
 
+##Make colors
 colours <- brewer.pal(10, "Blues") 
 
+##Plot variables. Using interveral as the classification method
 kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
 box()
-title(paste("LQ of SA01 and S000"))
-legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
+
+##Create title and legend
+title(paste("King County Working Tracts, LQ of SA01 and S000"))
+legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = 
+         ("Location Quotient for Workers 
+          who are 29yrs and below"))
 
 ```
