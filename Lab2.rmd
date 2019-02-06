@@ -206,7 +206,7 @@ title(paste("LQ of SA01 and S000"))
 legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
 
 ```
-
+###Part3.3
 ```{r l233, message=FALSE,warning=FALSE,echo=FALSE}
 library(tidyverse)
 library(reshape2)
@@ -227,8 +227,19 @@ register_google(key = "AIzaSyARcdnMrzlsyq4HEjUd4zWnJP4l4xmXTm0")
 kc_ll <- c(lon = -122.1665123,lat = 47.608988)
 llkc = cbind(kc_join[,12],kc_join[,11])
 kc_map <- get_map(kc_ll, zoom = 9, scale = 2)
-ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatter plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude")
+ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatter plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
 #scatter plot
-ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude")
+ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
 #contour plot to show concentration
+```
+###Part3.4
+```{r wutt3.4,message=FALSE,warning=FALSE,echo=FALSE}
+t = read.csv("wa_od_main_JT00_2015.csv")
+agg_t <- data.frame(t[,1:3]) #3 cols: w_geocode, h_geocode, S000(total no. of jobs)
+library(plyr)
+library(reshape2)
+agg <- aggregate(S000 ~ h_geocode + w_geocode , agg_t, sum) #aggregate the w/h and summerize
+library(dplyr)
+gga <- agg %>% arrange(desc(S000)) # desc
+head(gga)
 ```
