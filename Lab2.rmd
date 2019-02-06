@@ -122,6 +122,15 @@ rackc["UMWTshare"]=rackc$UMWT/rackc$C000
 #write.csv(rackc,"rac2015_Alljobs.csv")
 ```
 
+## Part 3 - Visualizing and Mapping
+### Step 1
+The data comes from the US Census, which is a census that is taken by the United States Census Bureau every ten years, and gathers information about the population itself. While the data from the Census is mainly used in population apportionment for dividing up the House of Representatives between the states, much of the data gathered on population itself is also used in research [purposes.](https://populationeducation.org/what-us-census-and-why-it-important/)
+
+However, there are inevitable flaws and problems with using Census data for research purposes. Some general problems with Census data include 'census microdata' and 'interpolated values'. Census microdata is data that is collected at the level of individual respondents and is recorded separately for every person involved. This has the advantage of being able to find relationships between 2 variables and performed detailed analysis for research purposes (unlike aggregated data, which is data combined from several measurements). However, this can be potentially abused and create privacy loss, which is why access to this type of data is often [restricted.](https://www.census.gov/research/data/restricted_use_microdata.html) On the other hand, interpolated values are basically values that are estimated by discovering a pattern between discrete, known data values. As the census data is not collected annually, interpolated values are often used (dependent on Census data) for population estimates between censuses. Of course, this introduces some uncertainity in those values as that there are just estimates based on the Census data [and can be flawed in certain population scenarios.](https://www.wisegeek.com/what-is-interpolation.htm) There are also problems in the how Census data records things, such as the issue with 'Census race categories'.The Census does has a history of contradictions, injustices, and absurdities when asking individuals on how they identify their racial categories. One such problem is how there is a practice of separating 'race' and 'ethnicity' as two different categories, as there are some people who do not see those two as separate categories. This leads to the larger debate on how race/ethnicity should be defined, which is now more commonly viewed as a more fluid product rather than a definite physical [characteristic.](http://www.pewresearch.org/fact-tank/2015/06/18/census-considers-new-approach-to-asking-about-race-by-not-using-the-term-at-all/) 
+
+Our area of interest is King County, Washington, mainly because of the Seattle and Bellevue region there. Specially, as there are many companies, varied infrastructures, and large working population; these factors can be meaningful when we are discussing about growth, employment rate, etc.(and something probably worth to research about, especially since we live in King County).
+
+Our main findings show that
 
 ##Part 3
 ###One non-spatial visualization
