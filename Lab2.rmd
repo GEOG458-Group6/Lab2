@@ -171,41 +171,7 @@ sectorjobs_plot
 ```
 The manufacturing sector seems to hire the most workers, followed by wholesale and then transportation and warehousing, although in a couple of blocks, transportation and warehousing is the dominant sector.
 
-##Part 3
-###Step6
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
-##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
-library(maptools)
-library(RColorBrewer)
-library(tmap)
-kcTract<- readShapeSpatial('C:/Users/LXB19/Documents/GEOG458/Lab2/kc_shp/king10ct')
-OD<- read.csv("OD2015_Alljobs.csv")
-names(kcTract)
 
-##extract the attribute data of instrest, in this case, it is the percentage of "Number of jobs of workers age 29 or younger" and the "Total Number of jobs", SA01/S000
-
-SA01 <- OD$SA01
-S000 <- OD$S000
-
-LQ <- function(SA01, S000){
-  sdp <- SA01/S000
-  dp <- sum(SA01) / sum(S000)
-  sdp/dp
-}
-
-
-kc_LQ <- data.frame(OD$wt, LQ(SA01, S000))
-colnames(kc_LQ) <- c("wt", "kc_LQ")
-brks<-c(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5)
-
-colours <- brewer.pal(10, "Blues") 
-
-kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
-box()
-title(paste("LQ of SA01 and S000"))
-legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
-
-```
 ###Part3.3
 ```{r l233, message=FALSE,warning=FALSE,echo=FALSE}
 library(tidyverse)
@@ -242,4 +208,42 @@ agg <- aggregate(S000 ~ h_geocode + w_geocode , agg_t, sum) #aggregate the w/h a
 library(dplyr)
 gga <- agg %>% arrange(desc(S000)) # desc
 head(gga)
+```
+
+
+
+##Part 3
+###Step6
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
+##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
+library(maptools)
+library(RColorBrewer)
+library(tmap)
+kcTract<- readShapeSpatial('C:/Users/LXB19/Documents/GEOG458/Lab2/kc_shp/king10ct')
+OD<- read.csv("OD2015_Alljobs.csv")
+names(kcTract)
+
+##extract the attribute data of instrest, in this case, it is the percentage of "Number of jobs of workers age 29 or younger" and the "Total Number of jobs", SA01/S000
+
+SA01 <- OD$SA01
+S000 <- OD$S000
+
+LQ <- function(SA01, S000){
+  sdp <- SA01/S000
+  dp <- sum(SA01) / sum(S000)
+  sdp/dp
+}
+
+
+kc_LQ <- data.frame(OD$wt, LQ(SA01, S000))
+colnames(kc_LQ) <- c("wt", "kc_LQ")
+brks<-c(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5)
+
+colours <- brewer.pal(10, "Blues") 
+
+kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
+box()
+title(paste("LQ of SA01 and S000"))
+legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
+
 ```
