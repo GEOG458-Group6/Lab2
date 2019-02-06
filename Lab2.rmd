@@ -141,6 +141,7 @@ ttujobs_plot
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
 library(tidyverse)
+detach("package:raster", unload = TRUE)
 
 WAC <- read.csv("wac2015_Alljobs.csv")
 total <- WAC %>%
@@ -176,10 +177,10 @@ The manufacturing sector seems to hire the most workers, followed by wholesale a
 ```{r l233, message=FALSE,warning=FALSE,echo=FALSE}
 library(tidyverse)
 library(reshape2)
-kC = read.csv('/Users/Wenjin/RStudio/kcTrack10.csv', row.names=1)
+kC = read.csv('kcTract10.csv', row.names=1)
 kCy <- as.tibble(kC)
 names(kCy) <- c("StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
-wac_a <- read.csv('/Users/Wenjin/RStudio/wac2015_Alljobs.csv', row.names=1)
+wac_a <- read.csv('wac2015_Alljobs.csv', row.names=1)
 wac_al <- as.tibble(wac_a)
 library(dplyr)
 kc_join <- inner_join(kCy,wac_al, by = "GEOID")
