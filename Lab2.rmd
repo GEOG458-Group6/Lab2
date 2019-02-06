@@ -143,11 +143,9 @@ library(ggplot2)
 library(tidyverse)
 detach("package:raster", unload = TRUE)
 
+## Loading data
 WAC <- read.csv("wac2015_Alljobs.csv")
-total <- WAC %>%
-  select(wt,C000) %>%
-  rename(njobs = C000)
-total$Type <- rep("Total",nrow(total))
+## Arranging industry data in a format useful to graphing
 utilities <- WAC %>%
   select(wt,CNS03) %>%
   rename(njobs = CNS03)
@@ -165,8 +163,10 @@ transware <- WAC %>%
   rename(njobs = CNS08)
 transware$Type <- rep("Transportation and Warehousing",nrow(transware))
 
+## Binding the rows of each data frame into one to graph
 jobs <- rbind(utilities,manufacturing,wholesale,transware)
 
+## Plotting data and displaying
 sectorjobs_plot <- ggplot(data=jobs,aes(x=wt, y=njobs, fill=Type)) + geom_bar(width=3,stat="identity") + xlab("Workplace Block") + ylab("Number of Jobs") + ggtitle("Proportions of Jobs in Census Blocks")
 sectorjobs_plot
 ```
@@ -217,10 +217,11 @@ head(gga)
 ###Step6
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
 ##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
+library(raster)
 library(maptools)
 library(RColorBrewer)
 library(tmap)
-kcTract<- readShapeSpatial('C:/Users/LXB19/Documents/GEOG458/Lab2/kc_shp/king10ct')
+kcTract<- readShapeSpatial('kc_shp/king10ct.shp')
 OD<- read.csv("OD2015_Alljobs.csv")
 names(kcTract)
 
@@ -244,7 +245,7 @@ colours <- brewer.pal(10, "Blues")
 
 kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
 box()
-title(paste("LQ of SA01 and S000"))
+title(paste("Location Quotients of Workers 29 and younger and Total Number of Jobs"))
 legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
 
 ```
