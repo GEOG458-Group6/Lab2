@@ -137,7 +137,39 @@ ttujobs_plot <- ggplot(data=OD_worktype_tract,aes(x=wt, y=S000, color=S000)) +ge
 ttujobs_plot
 
 ```
+###Proportions of Jobs in Census Blocks where People are Working
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(tidyverse)
 
+WAC <- read.csv("wac2015_Alljobs.csv")
+total <- WAC %>%
+  select(wt,C000) %>%
+  rename(njobs = C000)
+total$Type <- rep("Total",nrow(total))
+utilities <- WAC %>%
+  select(wt,CNS03) %>%
+  rename(njobs = CNS03)
+utilities$Type <- rep("Utilities",nrow(utilities))
+manufacturing <- WAC %>%
+  select(wt,CNS05) %>%
+  rename(njobs = CNS05)
+manufacturing$Type <- rep("Manufacturing",nrow(manufacturing))
+wholesale <- WAC %>%
+  select(wt,CNS06) %>%
+  rename(njobs = CNS06)
+wholesale$Type <- rep("Wholesale Trade",nrow(wholesale))
+transware <- WAC %>%
+  select(wt,CNS08) %>%
+  rename(njobs = CNS08)
+transware$Type <- rep("Transportation and Warehousing",nrow(transware))
+
+jobs <- rbind(utilities,manufacturing,wholesale,transware)
+
+sectorjobs_plot <- ggplot(data=jobs,aes(x=wt, y=njobs, fill=Type)) + geom_bar(width=3,stat="identity") + xlab("Workplace Block") + ylab("Number of Jobs") + ggtitle("Proportions of Jobs in Census Blocks")
+sectorjobs_plot
+```
+The manufacturing sector seems to hire the most workers, followed by wholesale and then transportation and warehousing, although in a couple of blocks, transportation and warehousing is the dominant sector.
 
 ##Part 3
 ###Step6
