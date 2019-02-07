@@ -136,17 +136,20 @@ Our main findings show that
 ###Step 2 
 ####First non-spatial visualization
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
-## Done by Jody
 library(ggplot2)
 library(raster)
 
+#plotted all the jobs according to residence block.
 alljobs_plot <- ggplot(data=OD_worktype_tract,aes(x=ht, y=S000, color=S000)) +geom_point() +xlab("Residence Block") +ylab("Total Number of Jobs") +ggtitle("Residence-Jobs Relation") +theme_bw()
 alljobs_plot
 
+#plotted all the jobs according to workplace block.
 ttujobs_plot <- ggplot(data=OD_worktype_tract,aes(x=wt, y=S000, color=S000)) +geom_point() +xlab("Workplace Block") +ylab("Total Number of Jobs") +ggtitle("Workplace-Jobs Relation") +theme_bw()
 ttujobs_plot
 
 ```
+We can see that increasingly, people live closer to their workplace so there is more packed data in Residence-Job Relation graph.  Overtime, it is harder for people to commute so they would much rather try to live closer to where they work.
+
 
 ####Second non-spatial visualization
 Proportions of Jobs in Census Blocks where People are Working
