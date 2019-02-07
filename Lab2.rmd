@@ -139,10 +139,11 @@ However, there are inevitable flaws and problems with using Census data for rese
 
 Our area of interest is King County, Washington, mainly because of the Seattle and Bellevue region there. Specially, as there are many companies, varied infrastructures, and large working population; these factors can be meaningful when we are discussing about growth, employment rate, etc.(and something probably worth to research about, especially since we live in King County).
 
-Our main findings show that
+Some of our main findings show that in King County that people generally live closer to their workplace and the manufacturing sector hires more workers than transporation, warehousing and wholesale sectors. They also reveal that most jobs are found in the Greater Seattle area and decrease in frequency as you go further away, and many of the workers in the area are younger than 29 years old.
 
-##Part 3
-###One non-spatial visualization
+### Step 2
+
+###First non-spatial visualization
 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
@@ -195,7 +196,7 @@ sectorjobs_plot
 The manufacturing sector seems to hire the most workers, followed by wholesale and then transportation and warehousing, although in a couple of blocks, transportation and warehousing is the dominant sector.
 
 
-###Part3.3
+### Step 3
 
 ```{r l233, message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
 library(tidyverse)
@@ -225,7 +226,7 @@ ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y
 #contour plot to show concentration
 ```
 
-###Part3.4
+### Step 4
 
 By plotting the contour map, we see the density of how jobs are distributed. The highest density happens from South Lake Union to Northgate. The jobs frequency decreases, as we go towards the periphery of the Greater Seattle Area. We don't see contour shades over East King County and Bainbridge Island, although the scatter plot shows some spots in East King County and Bainbridge Island.  This suggests that there are job opportunities in East King County and Bainbridge, but very minimal.
 
@@ -242,8 +243,9 @@ head(gga)
 ```
 Since the OD data contains the employment relationship between a home census block and a work census block, by aggregate the OD data frame, we get the summarized list of relationship that sorts the retrieved data in ascending order. To further indicate the pattern, we arrange the data in descending order so that we can get the idea of certain hometracts leads to certain worktrack. The work block that workers go the most is 530739400002045, 191 workers from 530739400001034 home block go to work at this worktract. Next in the list is the 530330228033006 worktract.  A total of 177 of 530330228032008 tract-resided workers work in 530330228033006 work block.
 
+### Step 5
 
-###Step6
+### Step 6
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
 library(raster)
 ##Calculate Location Quotients of OD data.
