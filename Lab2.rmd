@@ -7,10 +7,13 @@ output: html_document
 
 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
+<<<<<<< HEAD
 library(dplyr)
 ##Part 2 Preparing Data
 ###OD Data
 #For this step, the purpose is to aggregate each work type, for example, S000 and SA01, and then trim the sum of each work type to fit in the King County census tract 2010. 
+=======
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 
 ## read the od csv, and clean up formatting issues
 t = read.csv("wa_od_main_JT00_2015.csv")
@@ -48,7 +51,6 @@ kc <- read.csv("kcTract10.csv")
 
 ##change GEOID to wt for the joining/merging process
 names(kc)[5] <- ("wt")
-
 
 ##Merging to cut dataset down to just KC tracts
 kc_OD=merge(kc,OD_worktype_tract,by="wt")
@@ -124,25 +126,52 @@ rackc["UMWTshare"]=rackc$UMWT/rackc$C000
 #write.csv(rackc,"rac2015_Alljobs.csv")
 ```
 
+## Part 3 - Visualizing and Mapping
+### Step 1
+The data comes from the US Census, which is a census that is taken by the United States Census Bureau every ten years, and gathers information about the population itself. While the data from the Census is mainly used in population apportionment for dividing up the House of Representatives between the states, much of the data gathered on population itself is also used in research [purposes.](https://populationeducation.org/what-us-census-and-why-it-important/)
+
+However, there are inevitable flaws and problems with using Census data for research purposes. Some general problems with Census data include 'census microdata' and 'interpolated values'. Census microdata is data that is collected at the level of individual respondents and is recorded separately for every person involved. This has the advantage of being able to find relationships between 2 variables and performed detailed analysis for research purposes (unlike aggregated data, which is data combined from several measurements). However, this can be potentially abused and create privacy loss, which is why access to this type of data is often [restricted.](https://www.census.gov/research/data/restricted_use_microdata.html) On the other hand, interpolated values are basically values that are estimated by discovering a pattern between discrete, known data values. As the census data is not collected annually, interpolated values are often used (dependent on Census data) for population estimates between censuses. Of course, this introduces some uncertainity in those values as that there are just estimates based on the Census data [and can be flawed in certain population scenarios.](https://www.wisegeek.com/what-is-interpolation.htm) There are also problems in the how Census data records things, such as the issue with 'Census race categories'.The Census does has a history of contradictions, injustices, and absurdities when asking individuals on how they identify their racial categories. One such problem is how there is a practice of separating 'race' and 'ethnicity' as two different categories, as there are some people who do not see those two as separate categories. This leads to the larger debate on how race/ethnicity should be defined, which is now more commonly viewed as a more fluid product rather than a definite physical [characteristic.](http://www.pewresearch.org/fact-tank/2015/06/18/census-considers-new-approach-to-asking-about-race-by-not-using-the-term-at-all/) 
+
+Our area of interest is King County, Washington, mainly because of the Seattle and Bellevue region there. Specially, as there are many companies, varied infrastructures, and large working population; these factors can be meaningful when we are discussing about growth, employment rate, etc.(and something probably worth to research about, especially since we live in King County).
+
+Our main findings show that
 
 ##Part 3
+<<<<<<< HEAD
 ###One non-spatial visualization
 ```{r , message=FALSE, warning=FALSE, echo=FALSE, fig.width=12, fig.height=12}
 ## Done by Jody
+=======
+
+###Step 2 
+####First non-spatial visualization
+```{r , message=FALSE, warning=FALSE, echo=FALSE}
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 library(ggplot2)
 library(raster)
 
+#plotted all the jobs according to residence block.
 alljobs_plot <- ggplot(data=OD_worktype_tract,aes(x=ht, y=S000, color=S000)) +geom_point() +xlab("Residence Block") +ylab("Total Number of Jobs") +ggtitle("Residence-Jobs Relation") +theme_bw()
 alljobs_plot
 
+#plotted all the jobs according to workplace block.
 ttujobs_plot <- ggplot(data=OD_worktype_tract,aes(x=wt, y=S000, color=S000)) +geom_point() +xlab("Workplace Block") +ylab("Total Number of Jobs") +ggtitle("Workplace-Jobs Relation") +theme_bw()
 ttujobs_plot
 
 ```
+<<<<<<< HEAD
 
 ###Proportions of Jobs in Census Blocks where People are Working
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE, fig.width=12, fig.height=12}
+=======
+We can see that increasingly, people live closer to their workplace so there is more packed data in Residence-Job Relation graph.  Overtime, it is harder for people to commute so they would much rather try to live closer to where they work.
+
+
+####Second non-spatial visualization
+Proportions of Jobs in Census Blocks where People are Working
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 library(ggplot2)
 library(tidyverse)
 detach("package:raster", unload = TRUE)
@@ -205,27 +234,40 @@ ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatt
 ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
 #contour plot to show concentration
 ```
+<<<<<<< HEAD
 
 ###Part3.4
 
 ```{r wutt3.4,message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
+=======
+By plotting the contour map, we see the density of how jobs are distributed. The highest density happens from South Lake Union to Northgate. The jobs frequency decreases, as we go towards the periphery of the Greater Seattle Area. We don't see contour shades over East King County and Bainbridge Island, although the scatter plot shows some spots in East King County and Bainbridge Island.  This suggests that there are job opportunities in East King County and Bainbridge, but very minimal.
+
+###Part3.4 
+```{r wutt3.4,message=FALSE,warning=FALSE,echo=FALSE}
+options(scipen = 999) #turn off scientific notation for tract no.
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 t = read.csv("wa_od_main_JT00_2015.csv")
-agg_t <- data.frame(t[,1:3]) #3 cols: w_geocode, h_geocode, S000(total no. of jobs)
+agg_t <- data.frame(t[,1:3])
 library(plyr)
 library(reshape2)
-agg <- aggregate(S000 ~ h_geocode + w_geocode , agg_t, sum) #aggregate the w/h and summerize
+agg <- aggregate(S000 ~ h_geocode + w_geocode , agg_t, sum)
 library(dplyr)
 gga <- agg %>% arrange(desc(S000)) # desc
 head(gga)
 ```
+Since the OD data contains the employment relationship between a home census block and a work census block, by aggregate the OD data frame, we get the summarized list of relationship that sorts the retrieved data in ascending order. To further indicate the pattern, we arrange the data in descending order so that we can get the idea of certain hometracts leads to certain worktrack. The work block that workers go the most is 530739400002045, 191 workers from 530739400001034 home block go to work at this worktract. Next in the list is the 530330228033006 worktract.  A total of 177 of 530330228032008 tract-resided workers work in 530330228033006 work block.
 
 
-
-##Part 3
 ###Step6
+<<<<<<< HEAD
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=12}
 ##Calculate Location Quotients (Links to an external site.)Links to an external site. for all of your data, and then "zoom in" to look at the location quotients for the subset of tracts selected from your OD data.
 library(raster)
+=======
+Based on the LQ plot, we can see high clustering of workers younger than 29 working at Western Washington Area. Since the King County shapefile includes waterbodies (some people living on a boat, and US Census includes them as a single tract), thoses tracts has a really high location quotient. This shouldn't affect the study, because we are giving an overview on the distribution of workers in the entire county. This analysis corresponds to our assumption that cities such as Seattle, Bellevue, and Kirkland usually have high clustering of young age workers.
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
+##Calculate Location Quotients of OD data.
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 library(maptools)
 library(RColorBrewer)
 library(tmap)
@@ -238,22 +280,38 @@ names(kcTract)
 SA01 <- OD$SA01
 S000 <- OD$S000
 
+##Creating a function to calculate the location quotient between SA01 and S000
 LQ <- function(SA01, S000){
   sdp <- SA01/S000
   dp <- sum(SA01) / sum(S000)
   sdp/dp
 }
 
-
+##Creating a dataframe to includ working tract, and location quotient
 kc_LQ <- data.frame(OD$wt, LQ(SA01, S000))
+
+##Change the column names
 colnames(kc_LQ) <- c("wt", "kc_LQ")
+
+##Creating breaks to get choropleth map 
 brks<-c(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5)
 
+##Make colors
 colours <- brewer.pal(10, "Blues") 
 
+##Plot variables. Using interveral as the classification method
 kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
 box()
+<<<<<<< HEAD
 title(paste("Location Quotients of Workers 29 and younger and Total Number of Jobs"))
 legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
+=======
+
+##Create title and legend
+title(paste("King County Working Tracts, LQ of SA01 and S000"))
+legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = 
+         ("Location Quotient for Workers 
+          who are 29yrs and below"))
+>>>>>>> 03f67f42347a2f64680d38e115683a0c6184d235
 
 ```
