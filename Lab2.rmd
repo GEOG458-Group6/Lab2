@@ -202,30 +202,33 @@ The manufacturing sector seems to hire the most workers, followed by wholesale a
 
 ### Step 3
 
-```{r p33, message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
+```{r l233, message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
 library(tidyverse)
 library(reshape2)
-kC = read.csv('kcTrack10.csv', row.names=1)
-kCy <- as.tibble(kC)
-names(kCy) <- c("StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
-wac_a <- read.csv('wac2015_Alljobs.csv', row.names=1)
-wac_al <- as.tibble(wac_a)
-library(dplyr)
-kc_join <- inner_join(kCy,wac_al, by = "GEOID")
-library(rgdal)
-kcTract<- readOGR('king10ct/king10ct.shp')
-kcTract.df <- as(kcTract, "data.frame")
-library(tmap)
-kcTract <- merge(kcTract, kc_join, by.x = "GEOID10", by.y = "GEOID")
-summary(kcTract)
-tm_shape(kcTract) + 
-  tm_fill("C000", style="fixed", breaks=c(0,2368,6925,14266,27418,67459 ),labels=c("71-2368","2369-6925","6926-14266","14267-27418","27419-67459" ),palette="Reds", title = "Jobs in King County",showNA = FALSE,colorNA = NULL)  +
-  tm_borders("grey") +
-  tm_legend(outside = TRUE, text.size = .8) +
-  tm_layout(frame = FALSE)
+library(ggmap)
 
+kC = read.csv("kcTract10.csv")
+kCy <- as.tibble(kC)
+names(kCy) <- c("FID","StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
+wac_a <- read.csv("wac2015_Alljobs.csv")
+wac_al <- as.tibble(wac_a)
+kc_join <- inner_join(kCy,wac_al, by = "GEOID")
+
+# inner join two tibbles to have king county data with lon and lat
+kc_joinSelect<- kc_join %>%
+  select(GEOID,lon,lat,C000)
+names(kc_joinSelect) <- c("GEOID", "lon", "lat","C000")
+#select and rename
+
+register_google(key = "AIzaSyARcdnMrzlsyq4HEjUd4zWnJP4l4xmXTm0")
+kc_ll <- c(lon = -122.1665123,lat = 47.608988)
+llkc = cbind(kc_join[,12],kc_join[,11])
+kc_map <- get_map(kc_ll, zoom = 9, scale = 2)
+ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatter plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
+#scatter plot
+ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
+#contour plot to show concentration
 ```
-The heat map indicates the job distribution in King County, using the aggregated data. The tract region has more jobs, as the color becomes darker.
 
 ### Step 4
 
@@ -238,22 +241,48 @@ library(reshape2)
 
 options(scipen = 999) #turn off scientific notation for tract no.
 
-## Find census tract with the most jobs
+## Find census tract with the least jobs
 od <- read.csv("OD2015_Alljobs.csv")
-agg <- aggregate(S000 ~ wt, od, sum)
+# Filter OD data to only include King County in home tracts as well
+od_filtered <- od %>%
+  filter(startsWith(as.character(ht),"53033"))
+agg <- aggregate(S000 ~ wt, od_filtered, sum)
 gga <- agg %>%
-  arrange(desc(S000))
-head(gga)
+  arrange(S000)
 
-od_subset <- od %>%
+## Select the subset from the filtered OD data and remove the row where work and home tract are the same, if it exists
+od_subset <- od_filtered %>%
   select(wt,ht) %>%
   filter(wt == gga[1,1]) %>%
   arrange(ht)
-od_subset
+od_subset <- od_subset[!(od_subset$wt == od_subset$ht),]
+
+## Prepare data by putting all tract IDs in one column and the color they are to be filled with in another.
+map_data <- od_subset %>%
+  select(ht)
+colnames(map_data)[colnames(map_data)=="ht"] <- "GEOID10"
+map_data$color <- rep("#5BC8FF",nrow(map_data))
+map_data <- add_row(map_data, color="#ff0000", GEOID10=od_subset[1,1], .before=TRUE)
+map_data <- unique(map_data)
 ```
 Since the OD data contains the employment relationship between a home census tract and a work census tract, by aggregating the OD data frame, we get the summarized list of relationships that sorts the retrieved data in ascending order by number of jobs coming from a certain hometract. By reversing this list, we can see which work tract has the most jobs coming from a certain home tract. Then, we create a subset of the OD data by selecting the entries containing the top work tract and the home tracts it is tied to.
 
 ### Step 5
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(raster)
+library(maptools)
+library(RColorBrewer)
+library(tmap)
+
+## Load census tract shape file and add the colors to it
+kc_tract <- readShapeSpatial('kc_shp/king10ct.shp')
+kc_tract <- merge(kc_tract, map_data, by = "GEOID10")
+
+## Use the quick tmap function to make a quick and easy map
+## NOTE: NEEDS LEGEND and TITLES and LABELS
+qtm(kc_tract, fill="color")
+
+```
 
 ### Step 6
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
