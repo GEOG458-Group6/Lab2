@@ -202,33 +202,30 @@ The manufacturing sector seems to hire the most workers, followed by wholesale a
 
 ### Step 3
 
-```{r l233, message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
+```{r p33, message=FALSE,warning=FALSE,echo=FALSE, fig.width=12, fig.height=12}
 library(tidyverse)
 library(reshape2)
-library(ggmap)
-
-kC = read.csv("kcTract10.csv")
+kC = read.csv('kcTrack10.csv', row.names=1)
 kCy <- as.tibble(kC)
-names(kCy) <- c("FID","StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
-wac_a <- read.csv("wac2015_Alljobs.csv")
+names(kCy) <- c("StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
+wac_a <- read.csv('wac2015_Alljobs.csv', row.names=1)
 wac_al <- as.tibble(wac_a)
+library(dplyr)
 kc_join <- inner_join(kCy,wac_al, by = "GEOID")
+library(rgdal)
+kcTract<- readOGR('king10ct/king10ct.shp')
+kcTract.df <- as(kcTract, "data.frame")
+library(tmap)
+kcTract <- merge(kcTract, kc_join, by.x = "GEOID10", by.y = "GEOID")
+summary(kcTract)
+tm_shape(kcTract) + 
+  tm_fill("C000", style="fixed", breaks=c(0,2368,6925,14266,27418,67459 ),labels=c("71-2368","2369-6925","6926-14266","14267-27418","27419-67459" ),palette="Reds", title = "Jobs in King County",showNA = FALSE,colorNA = NULL)  +
+  tm_borders("grey") +
+  tm_legend(outside = TRUE, text.size = .8) +
+  tm_layout(frame = FALSE)
 
-# inner join two tibbles to have king county data with lon and lat
-kc_joinSelect<- kc_join %>%
-  select(GEOID,lon,lat,C000)
-names(kc_joinSelect) <- c("GEOID", "lon", "lat","C000")
-#select and rename
-
-register_google(key = "AIzaSyARcdnMrzlsyq4HEjUd4zWnJP4l4xmXTm0")
-kc_ll <- c(lon = -122.1665123,lat = 47.608988)
-llkc = cbind(kc_join[,12],kc_join[,11])
-kc_map <- get_map(kc_ll, zoom = 9, scale = 2)
-ggmap(kc_map)+ geom_point(aes(lon,lat),data = kc_joinSelect)+labs(title = "Scatter plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
-#scatter plot
-ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y = lat, fill = ..level..,alpha = ..level..),size = 2, bins = 4, data = kc_joinSelect,geom = "polygon")+labs(title = "Contour plot of C000 - Total Numbers of Jobs in King County", x = "longitude",y = "latitude") 
-#contour plot to show concentration
 ```
+The heat map indicates the job distribution in King County, using the aggregated data. The tract region has more jobs, as the color becomes darker.
 
 ### Step 4
 
