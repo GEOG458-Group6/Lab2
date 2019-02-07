@@ -246,7 +246,7 @@ Since the OD data contains the employment relationship between a home census blo
 ### Step 5
 
 ### Step 6
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
 library(raster)
 ##Calculate Location Quotients of OD data.
 library(maptools)
@@ -283,8 +283,6 @@ colours <- brewer.pal(10, "Blues")
 ##Plot variables. Using interveral as the classification method
 kc_LQPlot <- plot(kcTract, col=colours[findInterval(kc_LQ$kc_LQ, brks, all.inside=TRUE)], axes=F)
 box()
-title(paste("Location Quotients of Workers 29 and younger and Total Number of Jobs"))
-legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = "Percent of workers <= 29")
 
 ##Create title and legend
 title(paste("King County Working Tracts, LQ of SA01 and S000"))
