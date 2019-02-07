@@ -257,13 +257,6 @@ od_subset <- od_filtered %>%
   arrange(ht)
 od_subset <- od_subset[!(od_subset$wt == od_subset$ht),]
 
-## Prepare data by putting all tract IDs in one column and the color they are to be filled with in another.
-map_data <- od_subset %>%
-  select(ht)
-colnames(map_data)[colnames(map_data)=="ht"] <- "GEOID10"
-map_data$color <- rep("#5BC8FF",nrow(map_data))
-map_data <- add_row(map_data, color="#ff0000", GEOID10=od_subset[1,1], .before=TRUE)
-map_data <- unique(map_data)
 ```
 Since the OD data contains the employment relationship between a home census tract and a work census tract, by aggregating the OD data frame, we get the summarized list of relationships that sorts the retrieved data in ascending order by number of jobs coming from a certain hometract. By reversing this list, we can see which work tract has the most jobs coming from a certain home tract. Then, we create a subset of the OD data by selecting the entries containing the top work tract and the home tracts it is tied to.
 
@@ -273,13 +266,22 @@ library(raster)
 library(maptools)
 library(RColorBrewer)
 library(tmap)
+library(maptools)
 
+## Prepare data by putting all tract IDs in one column and the color they are to be filled with in another.
+map_data <- od_subset %>%
+  select(ht)
+colnames(map_data)[colnames(map_data)=="ht"] <- "GEOID10"
+map_data$color <- rep("#5BC8FF",nrow(map_data))
+map_data <- add_row(map_data, color="#ff0000", GEOID10=od_subset[1,1], .before=TRUE)
+map_data <- unique(map_data)
 ## Load census tract shape file and add the colors to it
 kc_tract <- readShapeSpatial('kc_shp/king10ct.shp')
 kc_tract <- merge(kc_tract, map_data, by = "GEOID10")
 
 ## Use the quick tmap function to make a quick and easy map
 ## NOTE: NEEDS LEGEND and TITLES and LABELS
+legend_brk <- c(1,2)
 qtm(kc_tract, fill="color")
 
 ```
