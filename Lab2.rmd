@@ -5,6 +5,9 @@ date: "January 28, 2019"
 output: html_document
 ---
 
+##Part2 
+###Cleaning OD data, WAC, and RAC data.
+The purpose of cleaning OD data is to aggregate all entries in which the worktract-hometract relationship is the same, rather than one or the other. The WAC and RAC can be simply aggregated, but the OD data need to upgrade from block-block level to tract-tract level. All the three datasets that are downloaded from US Census will be trimed to King County. Here is a sample from the clean up OD dataset. 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
 library(dplyr)
 library(dplyr)
@@ -65,7 +68,7 @@ head(kc_OD)
 ```
 
 ###WAC Data
-The purpose of this clean up is to leave a block-level file accessible, while aggregate WAC and RAC data up to tract
+The purpose of this clean up is to leave a block-level file accessible, while aggregate WAC and RAC data up to tract. Here is a sample view of the cleaned WAC dataset. 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
 ## FOR WAC CSV
 ##Setting up table and cleaning up
@@ -101,6 +104,7 @@ wackc["UMWTshare"]=wackc$UMWT/wackc$C000
 ```
 
 ###RAC data
+Here is a sample view of the cleaned up RAC data. 
 ```{r , message=FALSE, warning=FALSE, echo=FALSE}
 ## FOR RAC CSV
 ##Setting up table and cleaning up
