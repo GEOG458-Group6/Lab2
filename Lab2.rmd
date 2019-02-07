@@ -246,7 +246,7 @@ Since the OD data contains the employment relationship between a home census blo
 ### Step 5
 
 ### Step 6
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 library(raster)
 ##Calculate Location Quotients of OD data.
 library(maptools)
