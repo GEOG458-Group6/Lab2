@@ -235,17 +235,26 @@ ggmap(kc_map,extent = "device",legend = "topleft")+stat_density2d(aes(x = lon, y
 By plotting the contour map, we see the density of how jobs are distributed. The highest density happens from South Lake Union to Northgate. The jobs frequency decreases, as we go towards the periphery of the Greater Seattle Area. We don't see contour shades over East King County and Bainbridge Island, although the scatter plot shows some spots in East King County and Bainbridge Island.  This suggests that there are job opportunities in East King County and Bainbridge, but very minimal.
 
 ```{r wutt3.4,message=FALSE,warning=FALSE,echo=FALSE}
-
-options(scipen = 999) #turn off scientific notation for tract no.
-t = read.csv("wa_od_main_JT00_2015.csv")
-agg_t <- data.frame(t[,1:3])
+library(tidyverse)
 library(plyr)
 library(reshape2)
-agg <- aggregate(S000 ~ h_geocode + w_geocode , agg_t, sum)
-gga <- agg %>% arrange(desc(S000)) # desc
+
+options(scipen = 999) #turn off scientific notation for tract no.
+
+## Find census tract with the most jobs
+od <- read.csv("OD2015_Alljobs.csv")
+agg <- aggregate(S000 ~ wt, od, sum)
+gga <- agg %>%
+  arrange(desc(S000))
 head(gga)
+
+od_subset <- od %>%
+  select(wt,ht) %>%
+  filter(wt == gga[1,1]) %>%
+  arrange(ht)
+od_subset
 ```
-Since the OD data contains the employment relationship between a home census block and a work census block, by aggregate the OD data frame, we get the summarized list of relationship that sorts the retrieved data in ascending order. To further indicate the pattern, we arrange the data in descending order so that we can get the idea of certain hometracts leads to certain worktrack. The work block that workers go the most is 530739400002045, 191 workers from 530739400001034 home block go to work at this worktract. Next in the list is the 530330228033006 worktract.  A total of 177 of 530330228032008 tract-resided workers work in 530330228033006 work block.
+Since the OD data contains the employment relationship between a home census tract and a work census tract, by aggregating the OD data frame, we get the summarized list of relationships that sorts the retrieved data in ascending order by number of jobs coming from a certain hometract. By reversing this list, we can see which work tract has the most jobs coming from a certain home tract. Then, we create a subset of the OD data by selecting the entries containing the top work tract and the home tracts it is tied to.
 
 ### Step 5
 
