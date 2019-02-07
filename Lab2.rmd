@@ -139,7 +139,7 @@ However, there are inevitable flaws and problems with using Census data for rese
 
 Our area of interest is King County, Washington, mainly because of the Seattle and Bellevue region there. Specially, as there are many companies, varied infrastructures, and large working population; these factors can be meaningful when we are discussing about growth, employment rate, etc.(and something probably worth to research about, especially since we live in King County).
 
-Our main findings show that
+Some of our main findings show that in King County that people generally live closer to their workplace and the manufacturing sector hires more workers than transporation, warehousing and wholesale sectors. They also reveal that most jobs are found in the Greater Seattle area and decrease in frequency as you go further away, and many of the workers in the area are younger than 29 years old.
 
 ##Part 3
 ###One non-spatial visualization
