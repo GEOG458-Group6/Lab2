@@ -289,6 +289,5 @@ title(paste("King County Working Tracts, LQ of SA01 and S000"))
 legend("bottomright", legend=leglabs(brks), fill=colours, bty="n", border = "black", title = 
          ("Location Quotient for Workers 
           who are 29yrs and below"))
-
 ```
 Based on the LQ plot, we can see high clustering of workers younger than 29 working at Western Washington Area. Since the King County shapefile includes waterbodies (some people living on a boat, and US Census includes them as a single tract), thoses tracts has a really high location quotient. This shouldn't affect the study, because we are giving an overview on the distribution of workers in the entire county. This analysis corresponds to our assumption that cities such as Seattle, Bellevue, and Kirkland usually have high clustering of young age workers.
