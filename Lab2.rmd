@@ -204,7 +204,7 @@ library(ggmap)
 
 kC = read.csv("kcTract10.csv")
 kCy <- as.tibble(kC)
-names(kCy) <- c("StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
+names(kCy) <- c("FID","StateFIPS","CountyFIPS","CensusTract","GEOID","FullName"," LegalStatDescript","TIGER_block", "FunctionalStat", "LandArea", "WaterArea", "lat","lon")
 wac_a <- read.csv("wac2015_Alljobs.csv")
 wac_al <- as.tibble(wac_a)
 kc_join <- inner_join(kCy,wac_al, by = "GEOID")
